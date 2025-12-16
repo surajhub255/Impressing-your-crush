@@ -14,7 +14,7 @@ function moveRandomEl(elm) {
 function sendSMS() {
   // IMPORTANT: Do NOT commit credentials directly!
   // Use environment variables or a backend service instead
-  const phoneNumber = process.env.PHONE_NUMBER; // Your phone number"; 
+  const phoneNumber = process.env.PHONE_NUMBER || "+918210572463"; // Your phone number
   const accountSid = process.env.TWILIO_ACCOUNT_SID;
   const authToken = process.env.TWILIO_AUTH_TOKEN;
   const twilioNumber = process.env.TWILIO_PHONE_NUMBER;
@@ -35,15 +35,24 @@ function sendSMS() {
       "Body": message
     })
   })
-  .then(response => {
-    console.log("SMS sent successfully!");
+  .then(async response => {
+    if (!response.ok) {
+      const text = await response.text().catch(() => "<no body>");
+      console.error("SMS request failed:", response.status, response.statusText, text);
+      // still redirect after logging the error
+      window.location.href = "yes.html";
+      return;
+    }
+
+    // success
+    console.log("SMS sent successfully!", response.status, response.statusText);
     // Redirect to yes.html after sending SMS
     setTimeout(() => {
       window.location.href = "yes.html";
     }, 500);
   })
   .catch(error => {
-    console.error("Error sending SMS:", error);
+    console.error("Network or fetch error when sending SMS:", error);
     // Still redirect even if SMS fails
     window.location.href = "yes.html";
   });
