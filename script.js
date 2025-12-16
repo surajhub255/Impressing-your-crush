@@ -40,7 +40,7 @@ function sendSMS() {
       const text = await response.text().catch(() => "<no body>");
       console.error("SMS request failed:", response.status, response.statusText, text);
       // still redirect after logging the error
-      window.location.href = "yes.html";
+      //window.location.href = "yes.html";
       return;
     }
 
@@ -54,6 +54,6 @@ function sendSMS() {
   .catch(error => {
     console.error("Network or fetch error when sending SMS:", error);
     // Still redirect even if SMS fails
-    window.location.href = "yes.html";
+    //window.location.href = "yes.html";
   });
 }
